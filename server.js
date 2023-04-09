@@ -1,1 +1,49 @@
 const express = require("express")
+const app = express()
+const morgan = require("morgan")
+const mongoose = require("mongoose")
+const {expressjwt} = require('express-jwt')
+const path = require("path")
+const process = require("process");
+
+require("dotenv").config()
+
+app.use(express.static("./client/build"))
+app.use(express.json())
+app.use(morgan("dev"))
+app.use(express.static(path.join(__dirname, 'client', 'build')));
+
+mongoose.connect(process.env.MONGODB_URI)
+    .then(
+        ()=> console.log("Connected to DB"),
+        err => console.log(err))
+
+
+const secret = process.env.SECRET || "some some secret"
+
+// app.use('/auth', require(path.join(__dirname,'routes','authRouter.js')))
+// app.use('/api', expressjwt({ secret, algorithms: ['HS256']}))
+// app.use('/api/userDrinks', require(path.join(__dirname,'routes','userDrinksRouter.js')))
+
+
+
+// app.use((err, req, res, next) => {
+//     console.log(err)
+//     if(err.name === "UnauthorizedError"){
+//         res.status(err.status)
+//     }
+//     return res.send({errMsg: err.message})
+// })
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// })
+
+const port = process.env.PORT || 9000
+
+app.listen(port, () => {
+    console.log('Server is running on local port 9000')
+})
+
+
+  
